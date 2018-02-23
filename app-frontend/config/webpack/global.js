@@ -100,7 +100,9 @@ module.exports = function (_path) {
                 _stylesheets: path.join(_path, 'src', 'app', 'assets', 'styles'),
                 _scripts: path.join(_path, 'src', 'app', 'assets', 'js'),
                 _api: path.join(_path, 'src', 'app', 'api'),
-                _redux: path.join(_path, 'src', 'app', 'redux')
+                _redux: path.join(_path, 'src', 'app', 'redux'),
+                loamLib: path.join(_path, 'node_modules', 'loam', 'lib'),
+                gdalJs: path.join(_path, 'node_modules', 'gdal-js')
             }
         },
 
@@ -120,7 +122,7 @@ module.exports = function (_path) {
                     'ngtemplate-loader?relativeTo=' + _path,
                     'html-loader?attrs[]=img:src&attrs[]=img:data-src&attrs[]=source:src'
                 ]
-            }, {
+            },  {
                 test: /\.js$/,
                 loaders: [
                     'baggage-loader?[file].html&[file].css'
@@ -170,6 +172,9 @@ module.exports = function (_path) {
                     'url-loader?name=assets/video/[name]_[hash].[ext]&limit=10000'
                 ]
             }, {
+                test: /(loam-worker\.js|gdal\.js|gdal\.wasm|gdal\.data)$/,
+                loader: 'file-loader?name=[name].[ext]'
+            }, {
                 test: require.resolve('angular-deferred-bootstrap'),
                 loaders: [
                     'expose?deferredBootstrapper'
@@ -204,6 +209,11 @@ module.exports = function (_path) {
                 test: require.resolve('mathjs'),
                 loaders: [
                     'expose?mathjs'
+                ]
+            }, {
+                test: require.resolve('loam'),
+                loaders: [
+                    'expose?loam'
                 ]
             }, {
                 test: /node_modules[\\\/]auth0-lock[\\\/].*\.js$/,
@@ -267,7 +277,7 @@ module.exports = function (_path) {
                 'BUILDCONFIG': {
                     APP_NAME: JSON.stringify('Raster Foundry'),
                     BASEMAPS: basemaps,
-                    API_HOST: JSON.stringify(''),
+                    API_HOST: JSON.stringify('https://app.staging.rasterfoundry.com'),
                     HERE_APP_ID: JSON.stringify(HERE_APP_ID),
                     HERE_APP_CODE: JSON.stringify(HERE_APP_CODE),
                     INTERCOM_APP_ID: JSON.stringify(INTERCOM_APP_ID),
@@ -276,6 +286,7 @@ module.exports = function (_path) {
                     LOGOFILE: JSON.stringify('raster-foundry-logo.svg'),
                     LOGOURL: JSON.stringify(false),
                     FAVICON_DIR: JSON.stringify('/favicon'),
+                    ROLLBAR_DISABLED: true,
                     FEED_SOURCE: JSON.stringify('https://blog.rasterfoundry.com/latest?format=json')
                 },
                 'HELPCONFIG': {

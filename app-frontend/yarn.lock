@@ -3133,6 +3133,10 @@ gaze@^1.0.0:
   dependencies:
     globule "^1.0.0"
 
+gdal-js@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/gdal-js/-/gdal-js-1.0.0.tgz#44e58ed2c314d58bd19d921a40b932742e5d7ec1"
+
 generate-function@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/generate-function/-/generate-function-2.0.0.tgz#6858fe7c0969b7d4e9093337647ac79f60dfbe74"
@@ -4394,6 +4398,12 @@ loader-utils@^1.0.2:
     big.js "^3.1.3"
     emojis-list "^2.0.0"
     json5 "^0.5.0"
+
+loam@1.0.0-alpha.5:
+  version "1.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/loam/-/loam-1.0.0-alpha.5.tgz#287d62edc4d548dfdfd55dfc626e5a03952899bc"
+  dependencies:
+    gdal-js "^1.0.0"
 
 lodash-es@^4.2.1:
   version "4.17.4"

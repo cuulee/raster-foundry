@@ -1,4 +1,11 @@
 /* global AWS, document, window, BUILDCONFIG */
+import { initialize as loamInitialize, open as loamOpen } from 'loam';
+/* eslint-disable no-unused-vars */
+import loamWorker from 'loamLib/loam-worker.js';
+import gdalJs from 'gdalJs/gdal.js';
+import gdalWasm from 'gdalJs/gdal.wasm';
+import gdalData from 'gdalJs/gdal.data';
+/* eslint-enable no-unused-vars */
 
 import planetLogo from '../../../../assets/images/planet-logo-light.png';
 import awsS3Logo from '../../../../assets/images/aws-s3.png';
@@ -8,7 +15,7 @@ const availableImportTypes = ['local', 'S3', 'Planet'];
 
 export default class SceneImportModalController {
     constructor(
-        $scope, $state,
+        $scope, $state, $q,
         projectService, Upload, uploadService, authService,
         rollbarWrapperService, datasourceService, userService
     ) {
@@ -16,6 +23,7 @@ export default class SceneImportModalController {
         this.BUILDCONFIG = BUILDCONFIG;
         this.$scope = $scope;
         this.$state = $state;
+        this.$q = $q;
         this.projectService = projectService;
         this.Upload = Upload;
         this.uploadService = uploadService;
@@ -38,6 +46,7 @@ export default class SceneImportModalController {
             prefix: ''
         };
         this.planetSceneIds = '';
+        this.selectedFileDatasets = [];
         this.selectedFiles = [];
         this.sceneData = {};
         this.uploadProgressPct = {};
@@ -106,6 +115,7 @@ export default class SceneImportModalController {
         }, {
             name: 'LOCAL_UPLOAD',
             onEnter: () => {
+                loamInitialize();
                 this.verifyFileCount();
             },
             previous: () => 'IMPORT',
@@ -115,6 +125,11 @@ export default class SceneImportModalController {
             allowClose: () => true
         }, {
             name: 'METADATA',
+            onExit: () => {
+                this.selectedFileDatasets.map(fileDS => {
+                    return fileDS.dataset.then(ds => ds.close());
+                });
+            },
             next: () => {
                 if (this.importType === 'S3') {
                     return 'S3_UPLOAD';
@@ -211,7 +226,7 @@ export default class SceneImportModalController {
     }
 
     shouldShowFileList() {
-        return this.selectedFiles.length;
+        return this.selectedFileDatasets.length;
     }
 
     shouldShowList() {
@@ -268,7 +283,7 @@ export default class SceneImportModalController {
     }
 
     verifyFileCount() {
-        return Boolean(this.selectedFiles.length);
+        return Boolean(this.selectedFileDatasets.length);
     }
 
     startLocalUpload() {
@@ -334,7 +349,7 @@ export default class SceneImportModalController {
         };
 
         if (this.importType === 'local') {
-            uploadObject.files = this.selectedFiles.map(f => f.name);
+            uploadObject.files = this.selectedFileDatasets.map(f => f.file.name);
             uploadObject.uploadType = 'LOCAL';
         } else if (this.importType === 'S3') {
             uploadObject.uploadType = 'S3';
@@ -372,7 +387,9 @@ export default class SceneImportModalController {
         });
         const s3 = new AWS.S3(config);
         this.cachedUploadConfig = {s3, bucket};
-        this.fileUploads = this.selectedFiles.map(file => this.sendFile(s3, bucket, file));
+        this.fileUploads = this.selectedFileDatasets.map(
+            fileDS => this.sendFile(s3, bucket, fileDS.file)
+        );
     }
 
     sendFile(s3, bucket, file) {
@@ -481,23 +498,50 @@ export default class SceneImportModalController {
     }
 
     filesSelected(files) {
-        this.selectedFiles = files;
+        let datasetPromises = files.map(file => this.$q.resolve(loamOpen(file)));
+        let bandCountPromises = datasetPromises.map(dsPromise => {
+            return this.bandCount(dsPromise);
+        });
+        this.$q.all(bandCountPromises).then(counts => {
+            this.selectedFileDatasets = counts.map((count, index) => {
+                return {
+                    file: files[index],
+                    dataset: datasetPromises[index],
+                    bandCount: count
+                };
+            });
+        });
+    }
+
+    bandCount(datasetPromise) {
+        return datasetPromise.then(ds => this.$q.resolve(ds.count()));
     }
 
     getTotalFileSize() {
-        if (this.selectedFiles.length) {
-            return this.selectedFiles.reduce((acc, f) => {
-                return acc + f.size;
+        if (this.selectedFileDatasets.length) {
+            return this.selectedFileDatasets.reduce((acc, f) => {
+                return acc + f.file.size;
             }, 0);
         }
         return 0;
     }
 
     removeFileAtIndex(index) {
-        this.selectedFiles.splice(index, 1);
+        this.$q.resolve(
+            this.selectedFileDatasets[index].dataset
+                .then(ds => ds.close())
+                .then(() => {
+                    this.selectedFileDatasets.splice(index, 1);
+                    this.selectedFiles.splice(index, 1);
+                })
+        );
     }
 
     removeAllFiles() {
+        this.selectedFileDatasets.map((fileDS) => {
+            fileDS.dataset.then(ds => ds.close());
+        });
+        this.selectedFileDatasets = [];
         this.selectedFiles = [];
     }
 
