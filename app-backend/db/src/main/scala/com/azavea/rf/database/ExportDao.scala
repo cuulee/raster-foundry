@@ -72,23 +72,15 @@ object ExportDao extends Dao[Export] {
 
   def getExportDefinition(id: UUID, user: User): ConnectionIO[ExportDefinition] = ???
 
-  def getExportStyle(export: Export, exportOptions: ExportOptions, user: User)(implicit xa: Transactor[IO]): OptionT[Future, Either[SimpleInput, ASTInput]] = {
-//     (export.projectId, export.toolRunId) match {
-//       // Exporting a tool-run
-//       case (_, Some(toolRunId)) => astInput(toolRunId, user).map(Right(_))
-//       // Exporting a project
-//       case (Some(projectId), None) => {
-//         val work: Future[Option[Either[SimpleInput, ASTInput]]] = {
-//           val x = simpleInput(projectId, export, user, exportOptions).attempt.transact(xa).unsafeToFuture()
-//           x.
-//           Some())
-//         }
-//         OptionT(work)
-//       }
-//       // Invalid
-//       case _ => OptionT.none
-//     }
-    ???
+  def getExportStyle(export: Export, exportOptions: ExportOptions, user: User)(implicit xa: Transactor[IO]): ConnectionIO[Either[SimpleInput, ASTInput]] = {
+    (export.projectId, export.toolRunId) match {
+      // Exporting a tool-run
+      case (_, Some(toolRunId)) => astInput(toolRunId, user).map(Right(_))
+      // Exporting a project
+      case (Some(projectId), None) => simpleInput(projectId, export, user, exportOptions).map(Left(_))
+      // Invalid
+      case _ => throw new Exception("Invalid export configuration")
+    }
   }
 
   /**
