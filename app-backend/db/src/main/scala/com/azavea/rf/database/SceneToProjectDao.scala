@@ -16,6 +16,7 @@ import cats.implicits._
 import geotrellis.slick.Projected
 import geotrellis.vector.Polygon
 import doobie.Fragments._
+
 import scala.concurrent.Future
 
 
