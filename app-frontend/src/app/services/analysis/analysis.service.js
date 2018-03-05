@@ -120,6 +120,10 @@ export default (app) => {
             return this.Template.get({id}).$promise;
         }
 
+        deleteTemplate(id) {
+            return this.Template.delete({id}).$promise;
+        }
+
         deleteAnalysis(id) {
             return this.Analysis.delete({id}).$promise;
         }

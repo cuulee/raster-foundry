@@ -1,1 +1,107 @@
-<div>This is a placeholder for the edit template view</div>
+<div class="template-detail-hero">
+  <div class="template-detail-hero-content">
+    <button type="button" class="btn btn-link" ui-sref="lab.browse.templates">
+      <span class="icon-arrow-left"></span> Templates
+    </button>
+    <div ng-if="!$ctrl.template" class="template-title-loading">
+      <h1>Loading</h1>
+      <span class="icon-load animate-spin"></span>
+    </div>
+    <h1 ng-if="$ctrl.template">{{$ctrl.template.title}}</h1>
+    <div class="hero-actions">
+      <button type="button"
+              class="btn btn-primary"
+              ng-click="$ctrl.createAnalysis()"
+              ng-disabled="!$ctrl.template">
+        Use tool
+      </button>
+      <button type="button" class="btn btn-icon-last" ng-disabled="!$ctrl.template">
+        <span>Bookmark</span> <span class="icon-star"></span></button>
+    </div>
+  </div>
+</div>
+<div class="template-detail-tabbar">
+  <div class="tabbar-content">
+    <div class="template-tab">Tool details</div>
+    <div class="template-actions">
+      <button type="button"
+              class="btn btn-danger btn-icon-last"
+              ng-click="$ctrl.onDelete()"
+              ng-if="$ctrl.template && $ctrl.template.owner === $ctrl.user">
+        <span>Delete tool</span><span class="icon-trash"></span>
+      </button>
+    </div>
+  </div>
+</div>
+<div class="template-detail-container">
+  <div class="template-detail-content">
+    <button type="button" class="btn btn-link btn-text" ng-disabled="!$ctrl.template">
+      <span class="icon-edit"></span> Edit tool details
+    </button>
+    <div class="template-description">
+      <h3>{{$ctrl.template.description}}</h3>
+    </div>
+    <div class="diagram-preview-placeholder" ng-if="!$ctrl.template"></div>
+    <div class="diagram-preview-container" ng-if="$ctrl.template">
+        <rf-diagram-container
+            class="with-position"
+        ></rf-diagram-container>
+    </div>
+    <div class="template-detail-description">
+      <p>
+        long tool details and description
+
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+        like Aldus PageMaker including versions of Lorem Ipsum.
+      </p>
+      <a href="#">Read more...</a>
+    </div>
+  </div>
+  <div class="template-detail-sidebar">
+    <div class="sidebar-section">
+      <h5>Details</h5>
+      <ul class="sidebar-list">
+        <li><span>Uploaded by:</span> user</li>
+        <li><span>Upload date:</span> {{$ctrl.template.createdAt | date}}</li>
+        <li><span>Last modified:</span> {{$ctrl.template.modifiedAt | date}}</li>
+        <li><span>Privacy:</span> <span class="color-danger">{{$ctrl.template.visibility | lowercase}}</span></li>
+      </ul>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Requirements for use</h5>
+      <div class="sidebar-section-text">
+        Requirements go here
+        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries, but also the leap into electronic typesetting,
+        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
+        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
+        like Aldus PageMaker including versions of Lorem Ipsum.
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Tags</h5>
+      <ul class="tag-list">
+        <li>tag 1</li>
+        <li>tag 2</li>
+        <li>this is a tag that's much too long to fit</li>
+        <li>tag 4</li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <h5>Category</h5>
+      <ul class="tag-list">
+        <li>Category 1</li>
+        <li>Category 2</li>
+      </ul>
+    </div>
+  </div>
+</div>
