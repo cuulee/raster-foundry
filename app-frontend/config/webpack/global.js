@@ -277,7 +277,7 @@ module.exports = function (_path) {
                 'BUILDCONFIG': {
                     APP_NAME: JSON.stringify('Raster Foundry'),
                     BASEMAPS: basemaps,
-                    API_HOST: JSON.stringify('https://app.staging.rasterfoundry.com'),
+                    API_HOST: JSON.stringify(''),
                     HERE_APP_ID: JSON.stringify(HERE_APP_ID),
                     HERE_APP_CODE: JSON.stringify(HERE_APP_CODE),
                     INTERCOM_APP_ID: JSON.stringify(INTERCOM_APP_ID),
@@ -286,7 +286,6 @@ module.exports = function (_path) {
                     LOGOFILE: JSON.stringify('raster-foundry-logo.svg'),
                     LOGOURL: JSON.stringify(false),
                     FAVICON_DIR: JSON.stringify('/favicon'),
-                    ROLLBAR_DISABLED: true,
                     FEED_SOURCE: JSON.stringify('https://blog.rasterfoundry.com/latest?format=json')
                 },
                 'HELPCONFIG': {
