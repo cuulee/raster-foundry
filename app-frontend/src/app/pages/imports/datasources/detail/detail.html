@@ -31,9 +31,10 @@
               <button
                 class="btn btn-text btn-licenses"
                 ng-if="!$ctrl.isSearchLicense"
-                ng-click="$ctrl.onSelectLicense()">
-                {{$ctrl.selectedLicense}}
-                <span>|<span class="icon-caret-down"></span></span>
+                ng-click="$ctrl.onSelectLicense()"
+                ng-attr-title="{{$ctrl.selectedLicense.name}}">
+                {{$ctrl.selectedLicense.shortName}}
+                <span class="icon-caret-down"></span>
               </button>
               <input
                 class="license-input"
@@ -55,8 +56,10 @@
               </div>
             </td>
             <td>
-              <a target="_blank" ng-href="{{$ctrl.selectedLicenseUrl}}">
-                {{$ctrl.selectedLicenseUrlDisplay}}
+              <a target="_blank"
+                 ng-attr-title="{{$ctrl.selectedLicense.url}}"
+                 ng-href="{{$ctrl.selectedLicense.url}}">
+                {{$ctrl.selectedLicense.url | shortenUrl}}
               </a>
             </td>
           </tr>

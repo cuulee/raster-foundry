@@ -26,9 +26,8 @@ class DatasourceDetailController {
     }
 
     initLicenseSettings() {
-        this.selectedLicense = 'None';
-        this.selectedLicenseUrl = '';
-        this.emptyLicense = [{'short_name': 'None', 'name': 'None'}];
+        this.selectedLicense = this.constructSelectedLicense('None', 'None', '#');
+        this.emptyLicense = [Object.assign({}, this.selectedLicense)];
     }
 
     loadDatasource() {
@@ -42,6 +41,7 @@ class DatasourceDetailController {
                 let id = this.authService.getProfile().sub;
                 this.isOwner = id === this.datasource.owner;
                 this.initBuffers();
+                // TODO: modify below two lines after api is ready
                 // eslint-disable-next-line
                 this.datasource.license_name = 'MIT-CMU';
                 this.getLicense(this.datasource);
@@ -64,21 +64,15 @@ class DatasourceDetailController {
             // TODO: (if needed) accomodate to the real license api to get this license's info
             this.datasourceLicenseService.get(datasource.license_name).then(
                 response => {
-                    this.license = JSON.parse(response);
-                    if (!_.isEmpty(this.license)) {
-                        // eslint-disable-next-line
-                        this.selectedLicense = this.license.short_name;
-                        this.selectedLicenseUrl = this.license.url;
-                        this.selectedLicenseUrlDisplay = this.shortenUrl(this.selectedLicenseUrl);
+                    if (response.length) {
+                        let license = JSON.parse(response);
+                        this.selectedLicense = this.constructSelectedLicense(
+                            license.short_name, license.name, license.url
+                        );
                     }
                 }
             );
         }
-    }
-
-    shortenUrl(url) {
-        let segments = url.split('/');
-        return `${segments[0]}//${segments[2]}/.../${url.substr(url.length - 15)}`;
     }
 
     onSelectLicense() {
@@ -129,12 +123,12 @@ class DatasourceDetailController {
     }
 
     onLicenseClick(license) {
-        this.selectedLicense = license.short_name;
-        this.selectedLicenseUrlDisplay = license.url ? this.shortenUrl(license.url) : '';
+        this.selectedLicense = this.constructSelectedLicense(
+            license.short_name, license.name, license.url
+        );
         this.isMouseOnLicenseOption = false;
         this.resetLicenseSearch();
-        // TODO: datasource does not have license name json interface built
-        // will do the datasource update once ^ is done.
+        // TODO: Update datasource once the doobie PR is merged
         this.$log.log(license);
     }
 
@@ -151,6 +145,14 @@ class DatasourceDetailController {
 
     setMatchedLicensesDefault(licenses) {
         return this.emptyLicense.concat(licenses);
+    }
+
+    constructSelectedLicense(shortName, name, url) {
+        return {
+            'shortName': shortName,
+            'name': name,
+            'url': url
+        };
     }
 
     openImportModal() {
