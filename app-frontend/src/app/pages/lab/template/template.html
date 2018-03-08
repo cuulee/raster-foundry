@@ -76,31 +76,25 @@
     <div class="sidebar-section">
       <h5>Requirements for use</h5>
       <div class="sidebar-section-text">
-        Requirements go here
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-        like Aldus PageMaker including versions of Lorem Ipsum.
+        {{$ctrl.template.requirements || 'None'}}
       </div>
     </div>
-
+    <div class="sidebar-section">
+      <h5>License</h5>
+      <div class="sidebar-section-text">
+        {{$ctrl.template.license || 'None specified'}}
+      </div>
+    </div>
     <div class="sidebar-section">
       <h5>Tags</h5>
       <ul class="tag-list">
-        <li>tag 1</li>
-        <li>tag 2</li>
-        <li>this is a tag that's much too long to fit</li>
-        <li>tag 4</li>
+        <li ng-repeat="tag in $ctrl.template.tags" ng-attr-title="{{tag.tag}}">{{tag.tag}}</li>
       </ul>
     </div>
     <div class="sidebar-section">
       <h5>Category</h5>
       <ul class="tag-list">
-        <li>Category 1</li>
-        <li>Category 2</li>
+        <li ng-repeat="category in $ctrl.template.categories">{{category.category}}</li>
       </ul>
     </div>
   </div>
