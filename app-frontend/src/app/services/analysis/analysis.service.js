@@ -21,6 +21,9 @@ export default (app) => {
                     },
                     create: {
                         method: 'POST'
+                    },
+                    update: {
+                        method: 'PUT'
                     }
                 }
             );
@@ -118,6 +121,10 @@ export default (app) => {
 
         getTemplate(id) {
             return this.Template.get({id}).$promise;
+        }
+
+        updateTemplate(template) {
+            return this.Template.update(template).$promise;
         }
 
         deleteTemplate(id) {
