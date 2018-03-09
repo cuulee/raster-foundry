@@ -116,7 +116,8 @@
         }
     }
 
-    .template-detail-description {
+    .template-description {
+        margin-top: 1em;
     }
 }
 
@@ -132,6 +133,7 @@
     .sidebar-list {
         li {
             padding: 0.2em 0;
+            white-space: nowrap;
         }
         span:first-child {
             font-weight: 700;

@@ -39,6 +39,7 @@
     <button type="button"
             class="btn btn-link btn-text"
             ng-click="$ctrl.onEditClick()"
+            ng-if="$ctrl.template && $ctrl.template.owner === $ctrl.user"
             ng-disabled="!$ctrl.template">
       <span class="icon-edit"></span> Edit tool details
     </button>

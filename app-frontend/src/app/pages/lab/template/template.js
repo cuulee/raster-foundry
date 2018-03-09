@@ -1,3 +1,4 @@
+import _ from 'lodash';
 import LabActions from '_redux/actions/lab-actions';
 
 class LabTemplateController {
@@ -65,15 +66,28 @@ class LabTemplateController {
     onDelete() {
         let answer = this.$window.confirm('Are you sure you want to delete this template?');
         if (answer) {
-            this.analysisService.deleteTemplate(this.analysis.id);
+            this.analysisService.deleteTemplate(this.template.id).then(() => {
+                this.$state.go('lab.browse.templates');
+            });
         }
     }
 
     onEditClick() {
+        this.oldTemplate = _.cloneDeep(this.template);
         this.editing = true;
     }
 
     onSaveClick() {
+        this.analysisService.updateTemplate(this.template).then(() => {
+            this.editing = false;
+        }, (err) => {
+            this.onCancelClick();
+            throw new Error('There was an error updating a template: ', err);
+        });
+    }
+
+    onCancelClick() {
+        this.template = this.oldTemplate;
         this.editing = false;
     }
 }
