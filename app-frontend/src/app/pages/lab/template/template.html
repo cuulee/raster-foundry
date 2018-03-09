@@ -33,33 +33,26 @@
     </div>
   </div>
 </div>
-<div class="template-detail-container">
+<!-- Detail view -->
+<div class="template-detail-container" ng-show="!$ctrl.editing">
   <div class="template-detail-content">
-    <button type="button" class="btn btn-link btn-text" ng-disabled="!$ctrl.template">
+    <button type="button"
+            class="btn btn-link btn-text"
+            ng-click="$ctrl.onEditClick()"
+            ng-disabled="!$ctrl.template">
       <span class="icon-edit"></span> Edit tool details
     </button>
-    <div class="template-description">
-      <h3>{{$ctrl.template.description}}</h3>
+    <div class="template-details">
+      <h3>{{$ctrl.template.details}}</h3>
     </div>
     <div class="diagram-preview-placeholder" ng-if="!$ctrl.template"></div>
     <div class="diagram-preview-container" ng-if="$ctrl.template">
-        <rf-diagram-container
-            class="with-position"
-        ></rf-diagram-container>
+      <rf-diagram-container
+          class="with-position"
+      ></rf-diagram-container>
     </div>
-    <div class="template-detail-description">
-      <p>
-        long tool details and description
-
-        Lorem Ipsum is simply dummy text of the printing and typesetting industry.
-        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
-        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
-        It has survived not only five centuries, but also the leap into electronic typesetting,
-        remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset
-        sheets containing Lorem Ipsum passages, and more recently with desktop publishing software
-        like Aldus PageMaker including versions of Lorem Ipsum.
-      </p>
-      <a href="#">Read more...</a>
+    <div class="template-description">
+      {{$ctrl.template.description}}
     </div>
   </div>
   <div class="template-detail-sidebar">
@@ -95,6 +88,93 @@
       <h5>Category</h5>
       <ul class="tag-list">
         <li ng-repeat="category in $ctrl.template.categories">{{category.category}}</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<!-- Editing template details -->
+<div class="template-detail-container" ng-show="$ctrl.editing">
+  <div class="template-detail-content">
+    <div>
+      <button type="button"
+              class="btn btn-link btn-text"
+              ng-click="$ctrl.onSaveClick()">
+        <span class="icon-save"></span> Save changes
+      </button>
+      <button type="button"
+              class="btn btn-link btn-text"
+              ng-click="$ctrl.onCancelClick()">
+        <span class="icon-cancel"></span> Cancel
+      </button>
+    </div>
+    <div class="template-edit-form">
+      <form class="form-group">
+        <label>
+          Name
+          <input class="form-control"
+                 type="text"
+                 ng-model="$ctrl.template.title"
+                 placeholder="Name">
+        </label>
+        <label>
+          Details
+          <input class="form-control"
+                 type="text"
+                 ng-model="$ctrl.template.details"
+                 placeholder="Details">
+        </label>
+        <label>
+          Description
+          <textarea class="form-control"
+                    rows="4"
+                    ng-model="$ctrl.template.description"></textarea>
+        </label>
+      </form>
+    </div>
+  </div>
+  <div class="template-detail-sidebar">
+    <div class="sidebar-section">
+      <h5>Details</h5>
+      <div>
+        <label>
+          <button class="btn btn-light btn-tiny" ng-click="$ctrl.editPrivacy()">
+            <span class="icon-pencil" ></span>
+          </button>
+          Privacy: <span class="color-danger">{{$ctrl.template.visibility | lowercase}}</span>
+        </label>
+      </div>
+    </div>
+
+    <div class="sidebar-section">
+      <h5>Requirements for use</h5>
+      <div class="sidebar-section-textbox">
+        <textarea class="form-control"
+                  ng-model="$ctrl.template.requirements"></textarea>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <h5>License</h5>
+      <div class="sidebar-section-textbox">
+        <textarea class="form-control"
+                  ng-model="$ctrl.template.license"></textarea>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <h5>Tags</h5>
+      <ul class="tag-list">
+        <li ng-repeat="tag in $ctrl.template.tags" ng-attr-title="{{tag.tag}}">{{tag.tag}}</li>
+        <li class="add-item" ng-click="$ctrl.addTag()">
+          New tag <span class="icon-plus"></span>
+        </li>
+      </ul>
+    </div>
+    <div class="sidebar-section">
+      <h5>Category</h5>
+      <ul class="tag-list">
+        <li ng-repeat="category in $ctrl.template.categories">{{category.category}}</li>
+        <li class="add-item" ng-click="$ctrl.addCategory()">
+          Add category<span class="icon-plus"></span>
+        </li>
       </ul>
     </div>
   </div>

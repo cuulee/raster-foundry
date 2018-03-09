@@ -87,7 +87,7 @@
         padding: 0.3em 0;
     }
 
-    .template-description {
+    .template-details {
         h3 {
             margin-top: 1rem;
             color: $shade-normal;
@@ -161,6 +161,9 @@
         white-space: nowrap;
         text-overflow: ellipsis;
         cursor: pointer;
+        &.add-item {
+            background-color: $shade-light;
+        }
     }
 }
 
@@ -172,5 +175,15 @@
         display: inline-block;
         color: $shade-light;
         margin-right: 0.25em;
+    }
+}
+
+.template-edit-form {
+    .form-group {
+        margin-top: 1em;
+        label {
+            display: block;
+            margin: 1em 0;
+        }
     }
 }

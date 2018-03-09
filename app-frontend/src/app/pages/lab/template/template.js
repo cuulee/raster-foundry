@@ -68,6 +68,14 @@ class LabTemplateController {
             this.analysisService.deleteTemplate(this.analysis.id);
         }
     }
+
+    onEditClick() {
+        this.editing = true;
+    }
+
+    onSaveClick() {
+        this.editing = false;
+    }
 }
 
 export default angular.module('pages.lab.template', [])
